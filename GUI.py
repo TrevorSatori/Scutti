@@ -1,10 +1,9 @@
-from msilib.schema import ComboBox
-from turtle import onclick
+import threading
 from Scutti import Scutti
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-scutti = Scutti()
 
+scutti = Scutti()
 
 class Ui_Form(object):
     def setupUi(self, Form):

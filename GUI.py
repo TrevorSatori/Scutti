@@ -290,13 +290,17 @@ class Ui_Form(object):
 
         # Choose function
         if self.cmbSelect.currentText() == 'Manual Screenshot':
-            scutti.sctManual()
+            task = threading.Thread(target=scutti.sctManual)
+            task.start()
         elif self.cmbSelect.currentText() == 'Automatic Screenshot':
-            scutti.sctAuto()
+            task = threading.Thread(target=scutti.sctAuto())
+            task.start()
         elif self.cmbSelect.currentText() == 'Manual Camera':
-            scutti.camManual()
+            task = threading.Thread(target=scutti.camManual())
+            task.start()
         elif self.cmbSelect.currentText() == 'Automatic Camera':
-            scutti.camAuto()
+            task = threading.Thread(target=scutti.camAuto())
+            task.start()
        
 
 if __name__ == "__main__":

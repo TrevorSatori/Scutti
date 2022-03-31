@@ -36,8 +36,8 @@ class Scutti:
         self.collection = os.path.join(os.getcwd(), 'collected-data')
         self.items = self.getItems()
         self.soundSnippets = self.getSounds()
-        self.snapKey = 'g'
-        self.quitKey = 'q'
+        self.snapKey = 'g'.lower()
+        self.quitKey = 'q'.lower()
         self.interval = 5
         self.camera = 0
 
@@ -54,7 +54,17 @@ class Scutti:
         user32.SetProcessDPIAware()
         height = user32.GetSystemMetrics(1)
         return height
+    
+    def seemsLegit(self):
+        if (self.xStart != 0):
+            if self.Width() - (self.xStart + self.getWidth()) < 0:
+                print('Screenshot out of bounds!')
+                exit()
         
+        if (self.yStart != 0):
+            if self.Height() - (self.yStart + self.getHeight()) < 0:
+                print('Screenshot out of bounds!')
+                exit()
 
     ''' Getters '''
 
@@ -149,22 +159,12 @@ class Scutti:
     # The higher the ystart value, the lower the capture. 
     # The higher the xstart value, the farther right it begins.
 
-    def screenshot(self, xstart = 0, ystart = 0):
-
-        if (xstart != 0 and self.width == self.Width()):
-            print('Screenshot out of bounds!')
-            print('before changing xstart, make sure to setWidth()')
-            exit()
-
-        if (ystart != 0 and self.height == self.height()):
-            print('Screenshot out of bounds!')
-            print('before changing ystart, make sure to setHeight()')
-            exit()
+    def screenshot(self):
 
         with mss.mss() as sct:
             
             # The area of screen to be captured
-            monitor = {'top': ystart, 'left': xstart, 'width': self.width, 'height': self.height}
+            monitor = {'top': self.yStart, 'left': self.xStart, 'width': self.width, 'height': self.height}
 
             # filename gets name of working directory, and creates name of files based on collection.
             filename = self.getcollection().split('\\')[-1] + str(len(self.getItems())) + '.png'
@@ -201,7 +201,7 @@ class Scutti:
 
             # if key is pressed take screenshot.
             if keyboard.is_pressed(self.snapKey):
-                self.screenshot(self.xStart, self.yStart)
+                self.screenshot()
                 count += 1
                 time.sleep(.15)
 
@@ -215,6 +215,8 @@ class Scutti:
             if keyboard.is_pressed(self.quitKey.upper()) or keyboard.is_pressed(self.quitKey.lower()):
                 print('Exiting')
                 break
+        GreatSuccess = os.path.join(FunkySide, 'GreatSuccess.mp3')
+        playsound(GreatSuccess)
 
     # takes screenshots on time interval.
     def sctAuto(self):
@@ -232,7 +234,7 @@ class Scutti:
 
             # every interval take a screenshot
             if whileTime - t > 0 and (whileTime - t) % self.interval == 0:
-                self.screenshot(self.xStart, self.yStart)
+                self.screenshot()
                 imgCount += 1
                 time.sleep(1)
                 print('image Count: ' + str(imgCount))
@@ -246,7 +248,7 @@ class Scutti:
         playsound(GreatSuccess)
 
 
-    def CamManual(self):
+    def camManual(self):
 
         # Error handling
         if self.snapKey.lower() == self.quitKey.lower():
@@ -265,6 +267,7 @@ class Scutti:
             # filename gets name of working directory, and creates name of files based on collection.
             filename = self.getcollection().split('\\')[-1] + str(len(self.getItems())) + '.png'
             fileOut = os.path.join(self.getcollection(), filename)
+
             ret, frame = vid.read()
             cv2.imshow('Scutti', frame)
 
@@ -274,7 +277,7 @@ class Scutti:
                 count += 1
                 time.sleep(.15)
                     
-            if cv2.waitKey(1) & 0xFF == ord(self.quitKey.upper()) or cv2.waitKey(1) & 0xFF == ord(self.quitKey.lower()):
+            if cv2.waitKey(1) & 0xFF == ord(self.quitKey):
                 break
         
         vid.release()
@@ -284,7 +287,7 @@ class Scutti:
         GreatSuccess = os.path.join(FunkySide, 'GreatSuccess.mp3')
         playsound(GreatSuccess)
 
-    def CamAuto(self):
+    def camAuto(self):
 
             print(self.interval, 'chosen as time interval, to quit press', self.quitKey, 'Enjoy!')
 
@@ -314,33 +317,10 @@ class Scutti:
                         
                 if cv2.waitKey(1) & 0xFF == ord(self.quitKey.upper()) or cv2.waitKey(1) & 0xFF == ord(self.quitKey.lower()):
                     break
+
             vid.release()
             cv2.destroyAllWindows()
+
             print(count, 'Images gathered.')
             GreatSuccess = os.path.join(FunkySide, 'GreatSuccess.mp3')
             playsound(GreatSuccess)
-
-    def eyesOpen(self, xstart = 0, ystart = 0):
-        with mss.mss() as sct:
-            # Defines screen capture area
-            monitor = {'top': ystart, 'left': xstart, 'width': self.width, 'height': self.height}
-
-            while 'Screen capturing':
-                last_time = time.time()
-
-                # Get raw pixels from the screen, save it to a Numpy array
-                img = numpy.array(sct.grab(monitor))
-
-                # Display the picture
-                cv2.imshow('OpenCV/Numpy normal', img)
-
-                # Display the picture in grayscale
-                # cv2.imshow('OpenCV/Numpy grayscale',
-                #            cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY))
-
-                print('fps: {}'.format(1 / (time.time() - last_time)))
-
-                # Press 'q' to quit
-                if cv2.waitKey(25) & 0xFF == ord('q'):
-                    cv2.destroyAllWindows()
-                    break

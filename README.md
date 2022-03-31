@@ -36,6 +36,12 @@ variablename.setHeight(1000) # Enter custom height (in pixels)
 To change interval between screenshots
 variablename.setInterval(4) # Enter custom time interval (in seconds)
 
+To change image capture key, default is 'g'
+variablename.setSnapKey('h') # Enter custom key
+
+To change quit key, default is 'q'
+variablename.setQuitKey('r') # Enter custom key
+
 # Functions 
 To capture screenshots with keypress
 variablename.sctManual()

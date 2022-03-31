@@ -18,6 +18,9 @@ variableName = Scutti()
 # changing Parameters
 You may not always want to capture the entire screen, no worries. 
 
+To create subfolder for data
+variableName.setCollection('Alligators') # Enter a custom collection
+
 To change starting x position (Goes from left to right)
 variablename.setXStart()
 

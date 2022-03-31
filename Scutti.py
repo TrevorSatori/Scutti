@@ -203,7 +203,7 @@ class Scutti:
             if keyboard.is_pressed(self.snapKey):
                 self.screenshot()
                 count += 1
-                time.sleep(.15)
+                time.sleep(.01)
 
                 # every 25 images let us know. Great Success
                 if count % benchmark == 0:
@@ -275,7 +275,7 @@ class Scutti:
             if keyboard.is_pressed(self.snapKey):
                 cv2.imwrite(fileOut, frame)
                 count += 1
-                time.sleep(.15)
+                time.sleep(.01)
                     
             if cv2.waitKey(1) & 0xFF == ord(self.quitKey):
                 break

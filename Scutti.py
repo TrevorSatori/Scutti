@@ -44,17 +44,32 @@ class Scutti:
 
     # Gets Width of Windows Monitor
     def Width(self):
-        user32 = ctypes.windll.user32
-        user32.SetProcessDPIAware()
-        width = user32.GetSystemMetrics(0)
+        if sys.platform == 'win32':
+            user32 = ctypes.windll.user32
+            user32.SetProcessDPIAware()
+            width = user32.GetSystemMetrics(0)
+        elif sys.platform == 'darwin':
+            width = NSScreen.mainScreen().frame().size.width
         return width
 
     # Gets Height of Windows Monitor
     def Height(self):
-        user32 = ctypes.windll.user32
-        user32.SetProcessDPIAware()
-        height = user32.GetSystemMetrics(1)
+        if sys.platform == 'win32':
+            user32 = ctypes.windll.user32
+            user32.SetProcessDPIAware()
+            height = user32.GetSystemMetrics(1)
+        elif sys.platform == 'darwin':
+            height = NSScreen.mainScreen().frame().size.height
         return height
+
+    def Resolution(self):
+        if sys.platform == 'win32':
+            user32 = ctypes.windll.user32
+            user32.SetProcessDPIAware()
+            [w, h] = [user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)]
+        elif sys.platform == 'darwin':
+            [w, h] = [NSScreen.mainScreen().frame().size.width, NSScreen.mainScreen().frame().size.height]
+        return w,h
     
     # Error handling
     def seemsLegit(self):
@@ -79,15 +94,6 @@ class Scutti:
 
     def getHeight(self):
         return self.height
-
-    def Resolution(self):
-        if sys.platform == 'win32':
-            user32 = ctypes.windll.user32
-            user32.SetProcessDPIAware()
-            [w, h] = [user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)]
-        elif sys.platform == 'darwin':
-            [w, h] = [NSScreen.mainScreen().frame().size.width, NSScreen.mainScreen().frame().size.height]
-        return w,h
     
     def getcollection(self):
         return self.collection
@@ -323,28 +329,3 @@ class Scutti:
             print(count, 'Images gathered.')
             GreatSuccess = os.path.join(FunkySide, 'GreatSuccess.mp3')
             playsound(GreatSuccess)
-
-    def eyesOpen(self, xstart = 0, ystart = 0):
-        with mss.mss() as sct:
-            # Defines screen capture area
-            monitor = {'top': ystart, 'left': xstart, 'width': self.width, 'height': self.height}
-
-            while 'Screen capturing':
-                last_time = time.time()
-
-                # Get raw pixels from the screen, save it to a Numpy array
-                img = numpy.array(sct.grab(monitor))
-
-                # Display the picture
-                cv2.imshow('OpenCV/Numpy normal', img)
-
-                # Display the picture in grayscale
-                # cv2.imshow('OpenCV/Numpy grayscale',
-                #            cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY))
-
-                print('fps: {}'.format(1 / (time.time() - last_time)))
-
-                # Press 'q' to quit
-                if cv2.waitKey(25) & 0xFF == ord('q'):
-                    cv2.destroyAllWindows()
-                    break

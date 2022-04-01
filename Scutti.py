@@ -7,10 +7,11 @@ import cv2
 import time
 import keyboard
 import random
-
-# Make sure to use playsound==1.2.2
+import sys
 from playsound import playsound
 
+if sys.platform == 'darwin':
+    from AppKit import NSScreen
 
 class Scutti:
 
@@ -28,7 +29,7 @@ class Scutti:
     
     # Initializes Class
     def __init__(self):
-        self.res = self.getResolution()
+        self.res = self.Resolution()
         self.xStart = 0
         self.yStart = 0
         self.width = self.Width()
@@ -55,6 +56,7 @@ class Scutti:
         height = user32.GetSystemMetrics(1)
         return height
     
+    # Error handling
     def seemsLegit(self):
         if (self.xStart != 0):
             if self.Width() - (self.xStart + self.getWidth()) < 0:
@@ -65,6 +67,10 @@ class Scutti:
             if self.Height() - (self.yStart + self.getHeight()) < 0:
                 print('Screenshot out of bounds!')
                 exit()
+    
+        if self.snapKey.lower() == self.quitKey.lower():
+            print('Capture Key and Quit key cannot be the same')
+            exit() 
 
     ''' Getters '''
 
@@ -74,10 +80,13 @@ class Scutti:
     def getHeight(self):
         return self.height
 
-    def getResolution(self):
-        user32 = ctypes.windll.user32
-        user32.SetProcessDPIAware()
-        [w, h] = [user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)]
+    def Resolution(self):
+        if sys.platform == 'win32':
+            user32 = ctypes.windll.user32
+            user32.SetProcessDPIAware()
+            [w, h] = [user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)]
+        elif sys.platform == 'darwin':
+            [w, h] = [NSScreen.mainScreen().frame().size.width, NSScreen.mainScreen().frame().size.height]
         return w,h
     
     def getcollection(self):
@@ -180,11 +189,6 @@ class Scutti:
     # takes screenshots on keypress.
     # snapkey is the key that triggers screenshot, benchmark is forra tha Borrat. 
     def sctManual(self, benchmark = 25):
-
-        # Error handling
-        if self.snapKey.lower() == self.quitKey.lower():
-            return print('Capture Key and Quit key cannot be the same')
-
         print(self.snapKey, 'chosen as screenshot key, to quit press ' + self.quitKey + ' Enjoy!')
 
         # Specifies directory of soundSnippets
@@ -249,11 +253,6 @@ class Scutti:
 
 
     def camManual(self):
-
-        # Error handling
-        if self.snapKey.lower() == self.quitKey.lower():
-            return print('Capture Key and Quit key cannot be the same')
-
         print(self.snapKey, 'chosen as screenshot key, to quit press q. Enjoy!')
 
         # Specifies directory of soundSnippets
@@ -275,7 +274,7 @@ class Scutti:
             if keyboard.is_pressed(self.snapKey):
                 cv2.imwrite(fileOut, frame)
                 count += 1
-                time.sleep(.01)
+                time.sleep(.15)
                     
             if cv2.waitKey(1) & 0xFF == ord(self.quitKey):
                 break
@@ -324,3 +323,28 @@ class Scutti:
             print(count, 'Images gathered.')
             GreatSuccess = os.path.join(FunkySide, 'GreatSuccess.mp3')
             playsound(GreatSuccess)
+
+    def eyesOpen(self, xstart = 0, ystart = 0):
+        with mss.mss() as sct:
+            # Defines screen capture area
+            monitor = {'top': ystart, 'left': xstart, 'width': self.width, 'height': self.height}
+
+            while 'Screen capturing':
+                last_time = time.time()
+
+                # Get raw pixels from the screen, save it to a Numpy array
+                img = numpy.array(sct.grab(monitor))
+
+                # Display the picture
+                cv2.imshow('OpenCV/Numpy normal', img)
+
+                # Display the picture in grayscale
+                # cv2.imshow('OpenCV/Numpy grayscale',
+                #            cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY))
+
+                print('fps: {}'.format(1 / (time.time() - last_time)))
+
+                # Press 'q' to quit
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    cv2.destroyAllWindows()
+                    break

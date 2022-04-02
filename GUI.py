@@ -325,13 +325,13 @@ class Ui_Scutti(object):
             task = threading.Thread(target=scutti.sctManual)
             task.start()
         elif self.cmbSelect.currentText() == 'Automatic Screenshot':
-            task = threading.Thread(target=scutti.sctAuto())
+            task = threading.Thread(target=scutti.sctAuto)
             task.start()
         elif self.cmbSelect.currentText() == 'Manual Camera':
-            task = threading.Thread(target=scutti.camManual())
+            task = threading.Thread(target=scutti.camManual)
             task.start()
         elif self.cmbSelect.currentText() == 'Automatic Camera':
-            task = threading.Thread(target=scutti.camAuto())
+            task = threading.Thread(target=scutti.camAuto)
             task.start()
 
 if __name__ == "__main__":

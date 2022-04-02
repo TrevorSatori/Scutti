@@ -242,7 +242,7 @@ class Ui_Scutti(object):
 
     def retranslateUi(self, Scutti):
         _translate = QtCore.QCoreApplication.translate
-        Scutti.setWindowTitle(_translate("Scutti", "Form"))
+        Scutti.setWindowTitle(_translate("Scutti", "Scutti"))
         self.lblWidth.setText(_translate("Scutti", "Width"))
         self.lblHeight.setText(_translate("Scutti", "Height"))
         self.lblXStart.setText(_translate("Scutti", "X Start"))

@@ -25,6 +25,7 @@ class Scutti:
     snapKey = ''
     quitKey = ''
     interval = 5
+    delay = 0
     camera = 0
     
     # Initializes Class
@@ -40,6 +41,7 @@ class Scutti:
         self.snapKey = 'g'.lower()
         self.quitKey = 'q'.lower()
         self.interval = 5
+        self.delay = 0
         self.camera = 0
 
     # Gets Width of Windows Monitor
@@ -131,6 +133,9 @@ class Scutti:
 
     def getYStart(self):
         return self.yStart
+    
+    def getDelay(self):
+        return self.delay
 
     ''' Setters '''
 
@@ -150,10 +155,10 @@ class Scutti:
         self.height = height
     
     def setSnapKey(self, snapKey):
-        self.snapKey = snapKey
+        self.snapKey = str(snapKey).lower()
     
     def setQuitKey(self, quitKey):
-        self.quitKey = quitKey
+        self.quitKey = str(quitKey).lower()
 
     def setInterval(self, interval):
         self.interval = interval
@@ -166,6 +171,9 @@ class Scutti:
     
     def setYStart(self, yStart):
         self.yStart = yStart
+
+    def setDelay(self, delay):
+        self.delay = delay
 
 
     ''' Functions ''' 
@@ -222,7 +230,7 @@ class Scutti:
                     imgCount = count - 1
                     print('Images Taken: ' + imgCount)
                     
-            if keyboard.is_pressed(self.quitKey.upper()) or keyboard.is_pressed(self.quitKey.lower()):
+            if keyboard.is_pressed(self.quitKey):
                 print('Exiting')
                 break
         GreatSuccess = os.path.join(FunkySide, 'GreatSuccess.mp3')
@@ -232,6 +240,11 @@ class Scutti:
     def sctAuto(self):
 
         print(self.interval, 'chosen as screenshot interval, to quit press', self.quitKey, 'Enjoy!')
+
+        if self.delay != 0: 
+            print('delay set for:', self.delay)
+            time.sleep(self.delay)
+            print('starting capture')
 
         # Specifies directory of soundSnippets
         FunkySide = os.path.join(os.getcwd(), 'SoundSnippets')
@@ -249,7 +262,7 @@ class Scutti:
                 time.sleep(1)
                 print('image Count: ' + str(imgCount))
                     
-            if keyboard.is_pressed(self.quitKey.upper()) or keyboard.is_pressed(self.quitKey.lower()):
+            if keyboard.is_pressed(self.quitKey):
                 print(self.quitKey + ' pressed, Exiting')
                 break
     
@@ -282,9 +295,11 @@ class Scutti:
                 count += 1
                 time.sleep(.15)
                     
-            if cv2.waitKey(1) & 0xFF == ord(self.quitKey):
+            cv2.waitKey(1)
+
+            # We implement keyboard rather than waitkey & 0xFF To remove lag as well as enable global macro 
+            if keyboard.is_pressed(self.quitKey):
                 break
-        
         vid.release()
         cv2.destroyAllWindows()
 
@@ -298,6 +313,11 @@ class Scutti:
 
             # Specifies directory of soundSnippets
             FunkySide = os.path.join(os.getcwd(), 'SoundSnippets')
+
+            if self.delay != 0: 
+                print('delay set for:', self.delay)
+                time.sleep(self.delay)
+                print('starting capture')
 
             # Camera to be captured
             vid = cv2.VideoCapture(self.camera)
@@ -319,10 +339,12 @@ class Scutti:
                     count += 1
                     time.sleep(1)
                     print('image Count: ' + str(count))
-                        
-                if cv2.waitKey(1) & 0xFF == ord(self.quitKey.upper()) or cv2.waitKey(1) & 0xFF == ord(self.quitKey.lower()):
-                    break
+                
+                cv2.waitKey(1)
 
+                # We implement keyboard rather than waitkey & 0xFF To remove lag as well as enable global macro 
+                if keyboard.is_pressed(self.quitKey):
+                    break
             vid.release()
             cv2.destroyAllWindows()
 

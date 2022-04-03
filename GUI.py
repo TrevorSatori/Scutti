@@ -317,7 +317,7 @@ class Ui_Scutti(object):
     # Runtime Logic
     def run(self):
       
-        if threading.active_count() >= 3:
+        if threading.active_count() >= 4:
             print('Already running a process.')
             print('To start a new process, end the current one by pressing', scutti.getQuitKey())
             return

@@ -209,7 +209,7 @@ class Scutti:
         FunkySide = os.path.join(os.getcwd(), 'SoundSnippets')
 
         # Selects random sound from soundSnippets
-        soundSelect = os.path.join(FunkySide, random.choice(self.soundSnippets))
+        soundSelect = os.path.join(FunkySide, random.choice(self.getSounds()))
         
         # 2 counts to adjust for the Borat
         count = 0

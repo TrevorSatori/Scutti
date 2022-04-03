@@ -207,15 +207,15 @@ class Scutti:
 
         # Specifies directory of soundSnippets
         FunkySide = os.path.join(os.getcwd(), 'SoundSnippets')
-
-        # Selects random sound from soundSnippets
-        soundSelect = os.path.join(FunkySide, random.choice(self.getSounds()))
         
         # 2 counts to adjust for the Borat
         count = 0
         imgCount = 0
 
         while True:
+   
+            # Selects random sound from soundSnippets
+            soundSelect = os.path.join(FunkySide, random.choice(self.soundSnippets))
 
             # if key is pressed take screenshot.
             if keyboard.is_pressed(self.snapKey):

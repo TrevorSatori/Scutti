@@ -228,7 +228,7 @@ class Scutti:
                     playsound(soundSelect)
                     count += 1
                     imgCount = count - 1
-                    print('Images Taken: ' + imgCount)
+                    print('Images Taken: ' + str(imgCount))
                     
             if keyboard.is_pressed(self.quitKey):
                 print('Exiting')
@@ -303,7 +303,7 @@ class Scutti:
         vid.release()
         cv2.destroyAllWindows()
 
-        print(count, 'Images gathered.')
+        print(str(count), 'Images gathered.')
         GreatSuccess = os.path.join(FunkySide, 'GreatSuccess.mp3')
         playsound(GreatSuccess)
 
@@ -348,6 +348,6 @@ class Scutti:
             vid.release()
             cv2.destroyAllWindows()
 
-            print(count, 'Images gathered.')
+            print(str(count), 'Images gathered.')
             GreatSuccess = os.path.join(FunkySide, 'GreatSuccess.mp3')
             playsound(GreatSuccess)

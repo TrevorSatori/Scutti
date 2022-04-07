@@ -1,12 +1,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 import threading
+from matchTemplate import matchTemplate
 from Convert import Convert
 from Scutti import Scutti
 
 scutti = Scutti()
 c = Convert()
-
+mt = matchTemplate()
 
 
 class Ui_Scutti(object):
@@ -129,14 +130,18 @@ class Ui_Scutti(object):
         self.lblTemplate.setAlignment(QtCore.Qt.AlignCenter)
         self.lblTemplate.setObjectName("lblTemplate")
         self.verticalLayout_2.addWidget(self.lblTemplate)
-        self.btnTemplate = QtWidgets.QPushButton(self.tabFilter)
+
+        # Match Template
+        self.btnTemplate = QtWidgets.QPushButton(self.tabFilter, clicked = lambda: mt.setTemplate(QFileDialog.getOpenFileName()[0]))
         font = QtGui.QFont()
         font.setFamily("Titillium Web")
         font.setPointSize(24)
         self.btnTemplate.setFont(font)
         self.btnTemplate.setObjectName("btnTemplate")
         self.verticalLayout_2.addWidget(self.btnTemplate)
-        self.btnMatchDirectory = QtWidgets.QPushButton(self.tabFilter)
+
+        # Match Directory
+        self.btnMatchDirectory = QtWidgets.QPushButton(self.tabFilter, clicked = lambda: mt.setDirectory(QFileDialog.getExistingDirectory()))
         font = QtGui.QFont()
         font.setFamily("Titillium Web")
         font.setPointSize(24)
@@ -150,11 +155,18 @@ class Ui_Scutti(object):
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.verticalLayout_2.addWidget(self.label)
+
+        # Slider Threshold
         self.sliderThreshold = QtWidgets.QSlider(self.tabFilter)
         self.sliderThreshold.setOrientation(QtCore.Qt.Horizontal)
         self.sliderThreshold.setObjectName("sliderThreshold")
         self.verticalLayout_2.addWidget(self.sliderThreshold)
-        self.btnMatchStart = QtWidgets.QPushButton(self.tabFilter)
+        self.sliderThreshold.setMinimum(25)
+        self.sliderThreshold.setMaximum(75)
+        self.sliderThreshold.valueChanged.connect(mt.setThreshold)
+
+        # Match Template Start Button
+        self.btnMatchStart = QtWidgets.QPushButton(self.tabFilter, clicked = lambda: self.matchTemplate())
         font = QtGui.QFont()
         font.setFamily("Titillium Web")
         font.setPointSize(24)
@@ -360,7 +372,12 @@ class Ui_Scutti(object):
             task = threading.Thread(target=c.start, args=(scutti.getcollection(), file[0]))
             task.start()
 
-    
+    def matchTemplate(self):
+        self.update()
+        task = threading.Thread(target=mt.start, args=(scutti.getcollection(),))
+        task.start()
+
+
     # Update Values
     def update(self):
 

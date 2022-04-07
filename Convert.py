@@ -2,13 +2,11 @@ import os
 import cv2
 from threading import Thread
 
-from matplotlib.pyplot import savefig
-
 class Convert:
 
     # States
     file = ''
-    subfolder = ''
+    subFolder = ''
     savePath = ''
     frames = 0
     fps = 0
@@ -32,7 +30,7 @@ class Convert:
 
         # File Attributes
         self.file = cv2.VideoCapture(file)
-        self.subFolder = os.path.splitext(savePath.split('\\')[-1])[0]
+        self.subFolder = os.path.splitext(file)[0]
         self.savePath = os.path.join(savePath, self.subFolder)
         self.frames = int(self.file.get(cv2.CAP_PROP_FRAME_COUNT))
         self.fps = int(self.file.get(cv2.CAP_PROP_FPS))

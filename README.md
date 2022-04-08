@@ -12,7 +12,5 @@ Once completed type - python GUI.py
 3. Manual Live Camera Capture
 4. Automatic Live Camera Capture
 5. Video Converter (takes video input and produces photos for every second of duration)
+6. Match Template (Given a template photo & threshold, will search through folder and save all matches to subfolder)
 
-# WIP
-
-Currently working on match Template function

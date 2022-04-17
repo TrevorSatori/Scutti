@@ -32,6 +32,7 @@ class Convert:
         self.file = cv2.VideoCapture(file)
         self.subFolder = os.path.splitext(file)[0]
         self.savePath = os.path.join(savePath, self.subFolder)
+        self.base = os.path.basename(self.subFolder)
         self.frames = int(self.file.get(cv2.CAP_PROP_FRAME_COUNT))
         self.fps = int(self.file.get(cv2.CAP_PROP_FPS))
         self.duration = int(self.frames / self.fps)
@@ -50,7 +51,7 @@ class Convert:
             os.mkdir(self.savePath)
     
         while not self.stopped:
-            filename = str(len(self.items())) + '.png'  
+            filename = str(self.base).lower() + '-' + str(len(self.items())) + '.png'
             fileOut = os.path.join(self.savePath, filename)
             ret, frame = self.file.read() 
             if self.count % self.fps == 0:
